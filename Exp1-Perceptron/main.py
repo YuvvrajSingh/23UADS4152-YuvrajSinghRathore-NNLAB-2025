@@ -46,18 +46,3 @@ perceptron_xor.train(X, Y_xor)
 print("XOR Perceptron Output:")
 for x in X:
     print(f"Input: {x}, Output: {perceptron_xor.predict(x)}")
-
-"""
-Model Description
-- A perceptron is a single-layer artificial neuron that classifies data based on a linear decision boundary.
-- The model consists of weights and a bias, updated using the perceptron learning rule.
-- The activation function used is the step function (returns 1 for positive values, 0 otherwise).
-- The perceptron can successfully classify linearly separable functions like NAND but fails for XOR due to non-linearity.
-
-Explanation:
-
-- The Perceptron is a simple artificial neuron that makes decisions based on inputs.
-- It learns by adjusting weights when its predictions are wrong.
-- The NAND function is successfully learned because it is linearly separable.
-- The XOR function fails because a single-layer perceptron cannot solve non-linearly separable problems.
-"""
