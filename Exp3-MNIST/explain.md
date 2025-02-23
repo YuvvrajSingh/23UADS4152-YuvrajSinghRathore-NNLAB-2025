@@ -76,7 +76,5 @@ This neural network consists of:
 ## Scope for Improvement
 
 - **Add Dropout Layers:** To prevent overfitting.
-- **Advanced Optimizers:** Use **Adam** or **RMSProp** for faster convergence.
 - **Dynamic Learning Rate:** Implement learning rate decay for optimization.
-- **Deeper Architectures:** Introduce more hidden layers for complex feature extraction.
-- **Backpropagation Customization:** Implement manual gradient calculations for deeper understanding.
+
