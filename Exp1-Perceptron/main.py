@@ -1,9 +1,9 @@
-import numpy as np  # Import NumPy for numerical operations
+import numpy as np 
 
 class Perceptron:
     def __init__(self, input_size, learning_rate=0.1, epochs=100):
         """Initialize the perceptron with random weights, learning rate, and training cycles (epochs)."""
-        self.weights = np.random.randn(input_size + 1)  # Extra weight for bias
+        self.weights = np.random.randn(input_size + 1)  
         self.learning_rate = learning_rate
         self.epochs = epochs
 
@@ -14,7 +14,7 @@ class Perceptron:
     def predict(self, x):
         """Make a prediction based on input x."""
         x = np.insert(x, 0, 1)  # Add bias term
-        return self.activation(np.dot(self.weights, x))  # Compute weighted sum and apply activation
+        return self.activation(np.dot(self.weights, x))  
 
     def train(self, X, y):
         """Train the perceptron by adjusting weights when predictions are wrong."""
@@ -44,12 +44,3 @@ perceptron_xor.train(X, Y_xor)
 print("XOR Perceptron Output:")
 for x in X:
     print(f"Input: {x}, Output: {perceptron_xor.predict(x)}")
-
-"""
-Explanation:
-
-- The Perceptron is a simple artificial neuron that makes decisions based on inputs.
-- It learns by adjusting weights when its predictions are wrong.
-- The NAND function is successfully learned because it is linearly separable.
-- The XOR function fails because a single-layer perceptron cannot solve non-linearly separable problems.
-"""

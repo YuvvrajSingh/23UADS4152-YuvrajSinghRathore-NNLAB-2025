@@ -27,9 +27,9 @@ class Perceptron:
 
 # XOR dataset
 X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-y_hidden1 = np.array([1, 1, 1, 0])  
-y_hidden2 = np.array([0, 1, 1, 1])  
-y_output = np.array([0, 1, 1, 0])   
+y_hidden1 = np.array([1, 1, 1, 0])
+y_hidden2 = np.array([0, 1, 1, 1])
+y_output = np.array([0, 1, 1, 0])
 
 # Train first hidden neuron
 hidden1 = Perceptron(input_size=2)
