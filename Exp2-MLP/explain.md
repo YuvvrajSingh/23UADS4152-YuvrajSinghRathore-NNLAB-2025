@@ -54,4 +54,3 @@ An **MLP** is a feedforward neural network with at least one hidden layer, capab
 
 - Use **sigmoid** or **ReLU** for gradient-friendly learning.
 - Implement **backpropagation** for efficient weight updates.
-- Expand architecture for complex classification tasks.
