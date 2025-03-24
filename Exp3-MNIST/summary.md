@@ -1,4 +1,5 @@
 Output:
+
 Epoch 1, Loss: 1.3646, Training Accuracy: 0.8228  
 Epoch 2, Loss: 0.5210, Training Accuracy: 0.8748  
 Epoch 3, Loss: 0.4030, Training Accuracy: 0.8913  
