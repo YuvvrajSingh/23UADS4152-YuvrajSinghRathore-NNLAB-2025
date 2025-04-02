@@ -1,116 +1,109 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
-# Load the MNIST dataset
+# Step 1: Load MNIST data
 mnist = tf.keras.datasets.mnist
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
 
-# Normalize input data and ensure consistent dtype
-x_train, x_test = x_train.astype(np.float32) / 255.0, x_test.astype(np.float32) / 255.0
+# Normalize the pixel values to be between 0 and 1
+X_train = X_train.astype(np.float32) / 255.0
+X_test = X_test.astype(np.float32) / 255.0
 
-# Flatten images to 1D vectors
-x_train = x_train.reshape(-1, 784)
-x_test = x_test.reshape(-1, 784)
+# Flatten the 28x28 images into a 1D array of size 784 (28*28)
+X_train = X_train.reshape(-1, 784)
+X_test = X_test.reshape(-1, 784)
 
-# Convert labels to one-hot encoding
-y_train = np.eye(10, dtype=np.float32)[y_train]
-y_test = np.eye(10, dtype=np.float32)[y_test]
+# Convert the labels to one-hot encoded vectors
+y_train_one_hot = np.eye(10)[y_train]
+y_test_one_hot = np.eye(10)[y_test]
 
-# Define network parameters
-n_input = 784
-n_hidden1 = 128
-n_hidden2 = 64
-n_output = 10
-learning_rate = 0.01
-epochs = 10
-batch_size = 100
 
-# Define weights and biases with explicit float32 type
-def init_weights(shape):
-    return tf.Variable(tf.random.normal(shape, stddev=0.1, dtype=tf.float32))
-
-W1 = init_weights([n_input, n_hidden1])
-b1 = tf.Variable(tf.zeros([n_hidden1], dtype=tf.float32))
-
-W2 = init_weights([n_hidden1, n_hidden2])
-b2 = tf.Variable(tf.zeros([n_hidden2], dtype=tf.float32))
-
-W3 = init_weights([n_hidden2, n_output])
-b3 = tf.Variable(tf.zeros([n_output], dtype=tf.float32))
-
-# Define the model using TensorFlow 2.x functions
-class NeuralNetwork(tf.Module):
+# Step 2: Define the model using tf.Variable
+class NeuralNetwork:
     def __init__(self):
-        super().__init__()
-        self.W1, self.b1 = W1, b1
-        self.W2, self.b2 = W2, b2
-        self.W3, self.b3 = W3, b3
+        # Initialize weights and biases
+        self.W1 = tf.Variable(tf.random.normal([784, 128], stddev=0.1))
+        self.b1 = tf.Variable(tf.zeros([128]))
+        self.W2 = tf.Variable(tf.random.normal([128, 64], stddev=0.1))
+        self.b2 = tf.Variable(tf.zeros([64]))
+        self.W3 = tf.Variable(tf.random.normal([64, 10], stddev=0.1))
+        self.b3 = tf.Variable(tf.zeros([10]))
 
-    def __call__(self, X):
-        X = tf.cast(X, tf.float32)  # Ensure input is float32
-        layer1 = tf.nn.relu(tf.add(tf.matmul(X, self.W1), self.b1))
-        layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, self.W2), self.b2))
-        output_layer = tf.add(tf.matmul(layer2, self.W3), self.b3)
-        return output_layer
+    def forward(self, x):
+        x = tf.matmul(x, self.W1) + self.b1
+        x = tf.nn.sigmoid(x)
+        x = tf.matmul(x, self.W2) + self.b2
+        x = tf.nn.sigmoid(x)
+        x = tf.matmul(x, self.W3) + self.b3
+        return tf.nn.softmax(x)
 
-# Instantiate the model
+
+# Step 3: Instantiate the model
 model = NeuralNetwork()
 
-# Define loss function and optimizer
-loss_fn = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
-optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate)
+# Step 4: Define the loss function and optimizer
+loss_fn = tf.nn.softmax_cross_entropy_with_logits
+optimizer = tf.optimizers.Adam(learning_rate=0.01)
 
-# Training loop using GradientTape
-for epoch in range(epochs):
-    total_batches = len(x_train) // batch_size
-    avg_loss = 0
 
-    for i in range(total_batches):
-        batch_x = x_train[i * batch_size: (i + 1) * batch_size]
-        batch_y = y_train[i * batch_size: (i + 1) * batch_size]
+# Step 5: Training function
+def train_step(model, x_batch, y_batch):
+    with tf.GradientTape() as tape:
+        logits = model.forward(x_batch)
+        loss = tf.reduce_mean(loss_fn(y_batch, logits))
+    grads = tape.gradient(loss, [model.W1, model.b1, model.W2, model.b2, model.W3, model.b3])
+    optimizer.apply_gradients(zip(grads, [model.W1, model.b1, model.W2, model.b2, model.W3, model.b3]))
+    return loss
 
-        with tf.GradientTape() as tape:
-            logits = model(batch_x)
-            loss = loss_fn(batch_y, logits)
 
-        grads = tape.gradient(loss, [model.W1, model.b1, model.W2, model.b2, model.W3, model.b3])
-        optimizer.apply_gradients(zip(grads, [model.W1, model.b1, model.W2, model.b2, model.W3, model.b3]))
+# Step 6: Evaluate the model on test data
+def evaluate(model, X_test, y_test):
+    predictions = model.forward(X_test)
+    accuracy = np.mean(np.argmax(predictions.numpy(), axis=1) == np.argmax(y_test, axis=1))
+    return accuracy
 
-        avg_loss += loss.numpy() / total_batches
 
-    # Compute accuracy
-    train_logits = model(x_train)
-    train_predictions = tf.argmax(train_logits, axis=1)
-    train_labels = tf.argmax(y_train, axis=1)
-    train_acc = tf.reduce_mean(tf.cast(tf.equal(train_predictions, train_labels), tf.float32))
+# Step 7: Training loop
+num_epochs = 10
+batch_size = 64
+num_batches = X_train.shape[0] // batch_size
+loss_history = []
 
-    print(f"Epoch {epoch+1}, Loss: {avg_loss:.4f}, Training Accuracy: {train_acc.numpy():.4f}")
+for epoch in range(num_epochs):
+    avg_cost = 0.0
+    progress_bar = tqdm(range(num_batches), desc=f"Epoch {epoch + 1}")
+    for batch in progress_bar:
+        start = batch * batch_size
+        end = (batch + 1) * batch_size
+        batch_X = X_train[start:end]
+        batch_Y = y_train_one_hot[start:end]
 
-# Evaluate model on test set
-test_logits = model(x_test)
-test_predictions = tf.argmax(test_logits, axis=1)
-test_labels = tf.argmax(y_test, axis=1)
-test_acc = tf.reduce_mean(tf.cast(tf.equal(test_predictions, test_labels), tf.float32))
+        loss = train_step(model, batch_X, batch_Y)
+        avg_cost += loss.numpy() / num_batches
 
-print(f"Test Accuracy: {test_acc.numpy():.4f}")
+        progress_bar.set_postfix(loss=avg_cost)
 
-# Function to test the model on a single image
-def test_single_image(image_index):
-    test_image = x_test[image_index].reshape(1, 784)
-    actual_label = np.argmax(y_test[image_index])
+    loss_history.append(avg_cost)
+    print(f"Epoch {epoch + 1}, Cost: {avg_cost:.4f}")
 
-    predicted_logits = model(test_image)
-    predicted_probabilities = tf.nn.softmax(predicted_logits)
-    predicted_label = np.argmax(predicted_probabilities.numpy())
+# Step 8: Evaluate the model on the test data
+test_accuracy = evaluate(model, X_test, y_test_one_hot)
+print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
 
-    # Display the image
-    plt.imshow(x_test[image_index].reshape(28, 28), cmap='gray')
-    plt.title(f"Actual: {actual_label}, Predicted: {predicted_label}")
-    plt.axis('off')
+# Step 9: Visualize loss curve
+plt.plot(range(1, num_epochs + 1), loss_history, marker='o', linestyle='-')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Loss Curve')
+plt.show()
+
+# Step 10: Visualize predictions
+predictions = model.forward(X_test[:5])
+predicted_classes = np.argmax(predictions.numpy(), axis=1)
+
+for i in range(5):
+    plt.imshow(X_test[i].reshape(28, 28), cmap='gray')
+    plt.title(f"Predicted: {predicted_classes[i]}, Actual: {y_test[i]}")
     plt.show()
-
-    print(f"Predicted probabilities: {predicted_probabilities.numpy()}")
-
-# Test a single random image
-test_single_image(image_index=np.random.randint(0, len(x_test)))
