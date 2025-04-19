@@ -224,21 +224,22 @@ Test accuracy: 0.8357
 
 ### **Validation Accuracy Trends**
 
-![Validation Accuracy Plot](attachment:/mnt/data/download.png)
+![image](https://github.com/user-attachments/assets/7b635f67-9845-45f9-8e32-cd8838fbe192)
 
-From the plot, we can observe:
 
-- **Adam optimizer consistently outperforms SGD** across all configurations, especially early in training.
-- **Filter size of 5x5** slightly outperforms 3x3 in most cases, possibly due to its ability to capture larger features.
-- **L2 regularization of 0.001** performs better than 0.01, suggesting that too much regularization hurts the model’s learning ability.
-- Smaller batch sizes (32) generally give better performance than larger ones (64), likely because they allow more weight updates per epoch.
-- The best-performing model reached a validation accuracy of just over **91%** by epoch 10.
+### **Plot Training vs Validation Loss**
+
+![image](https://github.com/user-attachments/assets/465f6dab-7a97-40bc-affc-d53e836378ba)
 
 ---
 
 ## **My Comments**
 
 - Using **Adam** as the optimizer led to faster convergence and better accuracy.
+- **Adam optimizer consistently outperforms SGD** across all configurations, especially early in training.
+- **L2 regularization of 0.001** performs better than 0.01, suggesting that too much regularization hurts the model’s learning ability.
+- Smaller batch sizes (32) generally give better performance than larger ones (64), likely because they allow more weight updates per epoch.
+- The best-performing model reached a validation accuracy of just over **91%** by epoch 10.
 - The validation accuracy graph clearly shows which settings perform best over time.
 - The model generalizes well, achieving over 90% accuracy without any advanced tricks.
 
