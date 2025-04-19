@@ -54,14 +54,16 @@ WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `ke
 - The model performs well on the **‘nv’ (nevus)** class, which is the most common in the dataset.
 - Classes like **‘akiec’ (Actinic keratoses)** and **‘df’ (Dermatofibroma)** had much lower recall, which means the model often misclassified these.
 
-![Confusion Matrix](attachment:/mnt/data/download.png)
+![image](https://github.com/user-attachments/assets/50655c10-033c-4a8f-a8ee-aa97a151f238)
+
 
 ### **Training Curves**
 
 - **Training Accuracy** kept improving with epochs, showing the model was learning.
 - **Validation Accuracy** plateaued and slightly declined after epoch 8–10 in the second training phase, suggesting slight overfitting.
 
-![Training and Validation Curves](<attachment:/mnt/data/download%20(1).png>)
+![image](https://github.com/user-attachments/assets/df9dab7b-d09b-4ec6-9944-19a860c65120)
+
 
 ### **Classification Report (Test Set)**
 
