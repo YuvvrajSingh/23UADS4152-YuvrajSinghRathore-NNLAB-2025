@@ -61,3 +61,15 @@ plt.ylabel('Validation Accuracy')
 plt.title('Effect of Hyperparameters on Model Performance')
 plt.legend()
 plt.show()
+
+# Plot Training vs Validation Loss
+plt.figure(figsize=(12, 8))
+for key, history in results.items():
+    plt.plot(history.history['loss'], linestyle='--', label=f'{key} - Train Loss')
+    plt.plot(history.history['val_loss'], label=f'{key} - Val Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Training vs Validation Loss')
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
