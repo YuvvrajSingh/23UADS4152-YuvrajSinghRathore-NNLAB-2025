@@ -54,7 +54,11 @@ Epoch 480/500 - Loss: 0.4748
 Epoch 490/500 - Loss: 0.4619
 Epoch 500/500 - Loss: 0.4499
 
-✅ Test RMSE: 0.7939
+📊 Performance Metrics:
+✅ RMSE = 0.7939
+✅ MSE  = 0.6302
+✅ MAE  = 0.4223
+✅ R²   = -0.0757
 ```
 
 ## Plots and Observations
@@ -68,21 +72,8 @@ Epoch 500/500 - Loss: 0.4499
 
 ---
 
-### Plot 3: Next-Day Prediction on Full Time Series
-![image](https://github.com/user-attachments/assets/fbfb61f4-0f7c-433d-8ffb-5e105b0fbb53)
-
----
-
 ## Comments:
 
 - In Plot 1: Actual vs. Predicted (First 100 Points), the predicted line is very flat, showing little variation. This indicates underfitting, the model seems to act like a moving average, capturing long-term trends but missing out on sharp changes. This may be due to the shallow architecture or the model being biased by noise in the data.
 - The mid-training spikes in the loss curve are unusual and could indicate problems with training setup or data handling.
 - The model lacks the ability to react dynamically to changes, behaving more like a rolling mean than a time series predictor.
-
----
-
-## Recommendations
-
-1. **Switch to LSTM or GRU**: These models are better at capturing long-term dependencies.
-2. **Add Dropout and More Layers**: To improve generalization and model capacity.
-3. **Use Sliding Windows or Sequence-to-Sequence Prediction**: Predict a window of future values instead of just the next one.
