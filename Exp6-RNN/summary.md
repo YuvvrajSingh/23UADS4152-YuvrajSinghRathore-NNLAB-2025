@@ -60,12 +60,16 @@ Epoch 500/500 - Loss: 0.4499
 ## Plots and Observations
 
 ### Plot 1: Actual vs. Predicted (First 100 Points)
+![image](https://github.com/user-attachments/assets/e52ac6e6-51b5-4d0f-865c-f79b3cca136d)
+---
 
 ### Plot 2: Training Loss Curve
+![image](https://github.com/user-attachments/assets/025b5964-7b19-4b55-b8ca-f04411a1b944)
 
 ---
 
 ### Plot 3: Next-Day Prediction on Full Time Series
+![image](https://github.com/user-attachments/assets/fbfb61f4-0f7c-433d-8ffb-5e105b0fbb53)
 
 ---
 
